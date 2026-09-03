@@ -979,17 +979,20 @@ QA risks:
   /* ── RESPONSIVE ── */
   @media (max-width: 1024px) {
     .hero { grid-template-columns: 1fr; }
-    .hero-content { padding: 80px 40px 0; max-width: 640px; }
+    .hero-content { padding: 80px 40px; max-width: 640px; }
     .hero { min-height: auto; padding-bottom: 80px; }
     .hero-image {
+      display: block;
+      position: absolute;
+      inset: 0;
+      z-index: 0;
       height: auto;
-      aspect-ratio: 4/3;
-      margin: 40px 40px 0;
-      border-radius: var(--radius);
-      box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+      margin: 0;
+      border-radius: 0;
+      box-shadow: none;
     }
-    .hero-image img { opacity: 1; }
-    .hero-image::after { display: none; }
+    .hero-image img { width: 100%; height: 100%; object-fit: cover; opacity: 0.4; }
+    .hero-image::after { background: rgba(14,37,68,0.55); }
     .method-inner,
     .instructor-inner { grid-template-columns: 1fr; gap: 40px; }
     .pain-grid { grid-template-columns: 1fr; }
