@@ -1,0 +1,1344 @@
+<!DOCTYPE html><html lang="zh-Hant-TW" data-lvt-canonical="1"><!--
+Canvas: 1440px desktop / RWD 單欄滾動 landing page
+Design given: 溫暖手作風，米白 #FAF6EF 背景、墨綠 #3E5641 主色、陶土橘 #C97B4A 點綴、暖木色 #D9B48F 輔助
+
+Asset map:
+  工作坊主視覺 2048×1152 (16:9) → Hero 大圖，cover，暖色調
+    URL: https://a.lovart.ai/artifacts/agent/8KyqHnp7vb9mHIL2.png
+  手部編織特寫 2048×1536 (4:3) → 工作坊在做什麼區配圖，cover
+    URL: https://a.lovart.ai/artifacts/agent/eIxVorBsAK8LhRxx.png
+  成品手環與飾品陳列 2048×1536 (4:3) → 成品展示區，cover
+    URL: https://a.lovart.ai/artifacts/agent/Pg6Jwj2bwjGD3Uok.png
+  三人開心同樂手作 2048×1536 (4:3) → 活動氛圍區，cover
+    URL: https://a.lovart.ai/artifacts/agent/fmPpYeMXNmGpM8yZ.png
+  作者親編限量飾品禮物 2048×1536 (4:3) → 三人同行贈品區，cover
+    URL: https://a.lovart.ai/artifacts/agent/t0jNc8WyNU3VuRBx.png
+
+Palette:
+  --bg-cream: #FAF6EF (主背景米白)
+  --bg-white: #FFFFFF
+  --primary: #3E5641 (墨綠主色)
+  --primary-dark: #2F4233
+  --accent: #C97B4A (陶土橘)
+  --accent-dark: #A8622E
+  --warm: #D9B48F (暖木色)
+  --fg-title: #2F4233
+  --fg-body: #5A5348
+  --fg-light: #FFFFFF
+  --fg-muted: #8A7D72
+
+Typography: "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", sans-serif; 標題 700/800, 內文 400, 標籤 500
+
+Content map:
+  工作坊名稱 → nav logo + hero kicker
+  H1 → "打一個結，把心靜下來"
+  費用 NT$800 / 早鳥 NT$600 → 費用方案卡
+  三人同行贈品 → 費用卡 + 成品區
+  匯款資訊 → 報名匯款區（逐字）
+  公司名稱 → footer
+
+Assumptions:
+  - 早鳥票劃線原價 NT$800 呈現超值感
+  - 場次日期/地點未提供，以「場次資訊請洽粉專公告」中性說明
+  - 報名步驟：請於粉專/來訊留下姓名、人數與場次（無虛假表單 action）
+  - 卡片圓角 16px，陰影柔和 0 4px 20px rgba(0,0,0,0.07)
+  - 導覽列高度 64px，sticky
+
+QA risks:
+  - 匯款資訊逐字核對
+  - 費用金額核對
+  - 三人同行贈品文案核對
+--><head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>結繩工作坊 3 小時手作體驗 | 光線尺顧問有限公司</title>
+<style>
+  :root {
+    --bg-cream: #FAF6EF;
+    --bg-white: #FFFFFF;
+    --primary: #3E5641;
+    --primary-dark: #2F4233;
+    --primary-light: rgba(62,86,65,0.08);
+    --accent: #C97B4A;
+    --accent-dark: #A8622E;
+    --warm: #D9B48F;
+    --warm-light: rgba(217,180,143,0.2);
+    --fg-title: #2F4233;
+    --fg-body: #5A5348;
+    --fg-light: #FFFFFF;
+    --fg-muted: #8A7D72;
+    --radius: 16px;
+    --radius-sm: 10px;
+    --shadow: 0 4px 20px rgba(0,0,0,0.07);
+    --shadow-hover: 0 10px 36px rgba(0,0,0,0.12);
+    --font: "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", sans-serif;
+    --nav-h: 64px;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: var(--font);
+    color: var(--fg-body);
+    background: var(--bg-cream);
+    line-height: 1.7;
+    overflow-x: hidden;
+  }
+
+  img { display: block; max-width: 100%; }
+  a { text-decoration: none; color: inherit; }
+
+  /* ── NAV ── */
+  .nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    height: var(--nav-h);
+    background: rgba(250,246,239,0.96);
+    backdrop-filter: blur(10px);
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 40px;
+    box-shadow: 0 1px 12px rgba(62,86,65,0.1);
+    border-bottom: 1px solid rgba(217,180,143,0.3);
+  }
+
+  .nav-logo {
+    font-size: 1.1rem;
+    font-weight: 800;
+    color: var(--primary);
+    letter-spacing: 0.04em;
+    white-space: nowrap;
+  }
+
+  .nav-logo span { color: var(--accent); }
+
+  .nav-links {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    list-style: none;
+  }
+
+  .nav-links a {
+    font-size: 0.88rem;
+    color: var(--fg-body);
+    font-weight: 500;
+    transition: color 0.2s;
+    white-space: nowrap;
+  }
+
+  .nav-links a:hover { color: var(--accent); }
+
+  .btn-nav {
+    background: var(--accent) !important;
+    color: var(--fg-light) !important;
+    padding: 8px 20px;
+    border-radius: 20px;
+    font-weight: 700 !important;
+    font-size: 0.88rem !important;
+    transition: background 0.2s, transform 0.15s !important;
+  }
+
+  .btn-nav:hover { background: var(--accent-dark) !important; transform: translateY(-1px); }
+
+  .nav-toggle {
+    display: none;
+    flex-direction: column;
+    gap: 5px;
+    cursor: pointer;
+    background: none;
+    border: none;
+    padding: 4px;
+  }
+
+  .nav-toggle span {
+    display: block;
+    width: 24px;
+    height: 2px;
+    background: var(--primary);
+    border-radius: 2px;
+    transition: 0.3s;
+  }
+
+  /* ── HERO ── */
+  .hero {
+    min-height: 100vh;
+    background: var(--bg-cream);
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+    padding-top: var(--nav-h);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -100px; right: -100px;
+    width: 500px; height: 500px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(217,180,143,0.25) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .hero-content {
+    padding: 80px 60px 80px 80px;
+    position: relative;
+    z-index: 2;
+  }
+
+  .kicker {
+    display: inline-block;
+    background: rgba(201,123,74,0.12);
+    color: var(--accent);
+    font-size: 0.82rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    padding: 6px 14px;
+    border-radius: 20px;
+    border: 1px solid rgba(201,123,74,0.3);
+    margin-bottom: 24px;
+  }
+
+  .hero h1 {
+    font-size: clamp(2rem, 3.5vw, 3.2rem);
+    font-weight: 800;
+    color: var(--fg-title);
+    line-height: 1.25;
+    letter-spacing: -0.02em;
+    margin-bottom: 20px;
+  }
+
+  .hero h1 em {
+    font-style: normal;
+    color: var(--accent);
+  }
+
+  .hero-sub {
+    font-size: 1.05rem;
+    color: var(--fg-body);
+    line-height: 1.75;
+    margin-bottom: 36px;
+    max-width: 460px;
+  }
+
+  .hero-btns {
+    display: flex;
+    gap: 14px;
+    flex-wrap: wrap;
+  }
+
+  .btn-primary {
+    background: var(--accent);
+    color: var(--fg-light);
+    padding: 14px 30px;
+    border-radius: 30px;
+    font-weight: 700;
+    font-size: 1rem;
+    transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
+    box-shadow: 0 4px 20px rgba(201,123,74,0.35);
+    display: inline-block;
+  }
+
+  .btn-primary:hover {
+    background: var(--accent-dark);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 28px rgba(201,123,74,0.45);
+  }
+
+  .btn-outline {
+    background: transparent;
+    color: var(--primary);
+    padding: 14px 30px;
+    border-radius: 30px;
+    font-weight: 600;
+    font-size: 1rem;
+    border: 2px solid rgba(62,86,65,0.35);
+    transition: border-color 0.2s, background 0.2s;
+    display: inline-block;
+  }
+
+  .btn-outline:hover {
+    border-color: var(--primary);
+    background: var(--primary-light);
+  }
+
+  .hero-image {
+    height: 100vh;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+  }
+
+  .hero-image::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to right, var(--bg-cream) 0%, transparent 30%);
+  }
+
+  /* ── SECTION COMMON ── */
+  section { padding: 88px 0; }
+
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 40px;
+  }
+
+  .section-label {
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 12px;
+  }
+
+  .section-title {
+    font-size: clamp(1.6rem, 2.8vw, 2.4rem);
+    font-weight: 800;
+    color: var(--fg-title);
+    line-height: 1.3;
+    letter-spacing: -0.02em;
+    margin-bottom: 16px;
+  }
+
+  .section-desc {
+    font-size: 1.02rem;
+    color: var(--fg-body);
+    max-width: 580px;
+    line-height: 1.8;
+  }
+
+  /* ── WHAT WE DO ── */
+  .what-we-do { background: var(--bg-white); }
+
+  .what-inner {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 64px;
+    align-items: center;
+  }
+
+  .what-image {
+    border-radius: var(--radius);
+    overflow: hidden;
+    aspect-ratio: 4/3;
+    box-shadow: var(--shadow);
+  }
+
+  .what-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .steps {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    margin-top: 32px;
+  }
+
+  .step {
+    display: flex;
+    gap: 18px;
+    align-items: flex-start;
+  }
+
+  .step-num {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: var(--accent);
+    color: var(--fg-light);
+    font-size: 0.88rem;
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .step-text strong {
+    display: block;
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--fg-title);
+    margin-bottom: 4px;
+  }
+
+  .step-text span {
+    font-size: 0.88rem;
+    color: var(--fg-muted);
+  }
+
+  .what-note {
+    margin-top: 28px;
+    background: var(--warm-light);
+    border-radius: var(--radius-sm);
+    padding: 14px 18px;
+    font-size: 0.88rem;
+    color: var(--fg-body);
+    border-left: 3px solid var(--warm);
+  }
+
+  /* ── WHO IS IT FOR ── */
+  .who-for { background: var(--bg-cream); }
+
+  .who-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+    margin-top: 48px;
+  }
+
+  .who-card {
+    background: var(--bg-white);
+    border-radius: var(--radius);
+    padding: 28px 24px;
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    box-shadow: var(--shadow);
+    transition: transform 0.25s, box-shadow 0.25s;
+  }
+
+  .who-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-hover);
+  }
+
+  .who-icon {
+    font-size: 1.8rem;
+    flex-shrink: 0;
+  }
+
+  .who-card h3 {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--fg-title);
+    margin-bottom: 6px;
+  }
+
+  .who-card p {
+    font-size: 0.88rem;
+    color: var(--fg-muted);
+    line-height: 1.65;
+  }
+
+  /* ── PRODUCTS ── */
+  .products { background: var(--bg-white); }
+
+  .products-inner {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 48px;
+    align-items: center;
+    margin-top: 48px;
+  }
+
+  .product-image {
+    border-radius: var(--radius);
+    overflow: hidden;
+    aspect-ratio: 4/3;
+    box-shadow: var(--shadow);
+  }
+
+  .product-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .product-main {
+    background: var(--bg-cream);
+    border-radius: var(--radius);
+    padding: 28px 24px;
+    margin-bottom: 20px;
+    border: 1px solid rgba(217,180,143,0.4);
+  }
+
+  .product-main h3 {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--fg-title);
+    margin-bottom: 8px;
+  }
+
+  .product-main p {
+    font-size: 0.92rem;
+    color: var(--fg-body);
+    line-height: 1.7;
+  }
+
+  .gift-card {
+    background: linear-gradient(135deg, var(--primary) 0%, #2F4233 100%);
+    border-radius: var(--radius);
+    padding: 28px 24px;
+    color: var(--fg-light);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .gift-card::before {
+    content: '🎁';
+    position: absolute;
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 3rem;
+    opacity: 0.2;
+  }
+
+  .gift-badge {
+    display: inline-block;
+    background: var(--accent);
+    color: var(--fg-light);
+    font-size: 0.72rem;
+    font-weight: 700;
+    padding: 3px 10px;
+    border-radius: 4px;
+    letter-spacing: 0.08em;
+    margin-bottom: 10px;
+  }
+
+  .gift-card h3 {
+    font-size: 1.05rem;
+    font-weight: 700;
+    margin-bottom: 8px;
+    line-height: 1.4;
+  }
+
+  .gift-card p {
+    font-size: 0.88rem;
+    color: rgba(255,255,255,0.75);
+    line-height: 1.65;
+  }
+
+  /* ── VIBE ── */
+  .vibe { background: var(--bg-cream); }
+
+  .vibe-inner {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 64px;
+    align-items: center;
+  }
+
+  .vibe-image {
+    border-radius: var(--radius);
+    overflow: hidden;
+    aspect-ratio: 4/3;
+    box-shadow: var(--shadow);
+    order: 2;
+  }
+
+  .vibe-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .vibe-text { order: 1; }
+
+  .vibe-quote {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--fg-title);
+    line-height: 1.65;
+    margin-bottom: 20px;
+    border-left: 4px solid var(--accent);
+    padding-left: 20px;
+  }
+
+  .vibe-desc {
+    font-size: 0.95rem;
+    color: var(--fg-body);
+    line-height: 1.8;
+  }
+
+  /* ── PRICING ── */
+  .pricing { background: var(--bg-white); }
+
+  .pricing-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    margin-top: 48px;
+  }
+
+  .price-card {
+    background: var(--bg-cream);
+    border-radius: var(--radius);
+    padding: 32px 24px;
+    text-align: center;
+    box-shadow: var(--shadow);
+    border: 2px solid transparent;
+    transition: transform 0.25s, box-shadow 0.25s, border-color 0.25s;
+    position: relative;
+  }
+
+  .price-card:hover {
+    transform: translateY(-6px);
+    box-shadow: var(--shadow-hover);
+  }
+
+  .price-card.featured {
+    border-color: var(--accent);
+    background: var(--bg-white);
+  }
+
+  .price-card.featured::before {
+    content: '限時優惠';
+    position: absolute;
+    top: -12px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--accent);
+    color: var(--fg-light);
+    font-size: 0.72rem;
+    font-weight: 700;
+    padding: 4px 14px;
+    border-radius: 20px;
+    letter-spacing: 0.06em;
+    white-space: nowrap;
+  }
+
+  .price-card-icon {
+    font-size: 2rem;
+    margin-bottom: 12px;
+  }
+
+  .price-card-name {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--fg-title);
+    margin-bottom: 16px;
+  }
+
+  .price-original {
+    font-size: 0.88rem;
+    color: var(--fg-muted);
+    text-decoration: line-through;
+    margin-bottom: 4px;
+  }
+
+  .price-amount {
+    font-size: 2.2rem;
+    font-weight: 800;
+    color: var(--accent);
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+    margin-bottom: 4px;
+  }
+
+  .price-unit {
+    font-size: 0.82rem;
+    color: var(--fg-muted);
+    margin-bottom: 20px;
+  }
+
+  .price-includes {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    text-align: left;
+  }
+
+  .price-includes li {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    font-size: 0.85rem;
+    color: var(--fg-body);
+    line-height: 1.55;
+  }
+
+  .price-includes li::before {
+    content: '✓';
+    color: var(--accent);
+    font-weight: 700;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  .price-tag {
+    display: inline-block;
+    background: rgba(62,86,65,0.1);
+    color: var(--primary);
+    font-size: 0.72rem;
+    font-weight: 700;
+    padding: 3px 10px;
+    border-radius: 4px;
+    margin-bottom: 12px;
+    letter-spacing: 0.06em;
+  }
+
+  /* ── REGISTRATION ── */
+  .registration {
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+    padding: 88px 0;
+  }
+
+  .registration .section-label { color: var(--warm); }
+  .registration .section-title { color: var(--fg-light); }
+
+  .reg-inner {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 48px;
+    margin-top: 48px;
+    align-items: start;
+  }
+
+  .reg-steps {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .reg-step {
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+  }
+
+  .reg-step-num {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: var(--accent);
+    color: var(--fg-light);
+    font-size: 0.85rem;
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .reg-step-text strong {
+    display: block;
+    font-size: 0.98rem;
+    font-weight: 700;
+    color: var(--fg-light);
+    margin-bottom: 4px;
+  }
+
+  .reg-step-text span {
+    font-size: 0.88rem;
+    color: rgba(255,255,255,0.65);
+    line-height: 1.6;
+  }
+
+  .bank-card {
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.18);
+    border-radius: var(--radius);
+    padding: 32px 28px;
+    backdrop-filter: blur(4px);
+  }
+
+  .bank-card-title {
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    color: var(--warm);
+    text-transform: uppercase;
+    margin-bottom: 20px;
+  }
+
+  .bank-rows {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .bank-row {
+    display: flex;
+    gap: 12px;
+    align-items: baseline;
+  }
+
+  .bank-label {
+    font-size: 0.82rem;
+    color: rgba(255,255,255,0.55);
+    white-space: nowrap;
+    min-width: 72px;
+  }
+
+  .bank-value {
+    font-size: 0.98rem;
+    font-weight: 700;
+    color: var(--fg-light);
+    letter-spacing: 0.02em;
+  }
+
+  .bank-value.highlight {
+    color: var(--warm);
+    font-size: 1.05rem;
+    letter-spacing: 0.04em;
+  }
+
+  .bank-divider {
+    height: 1px;
+    background: rgba(255,255,255,0.12);
+    margin: 8px 0;
+  }
+
+  .bank-note {
+    margin-top: 18px;
+    background: rgba(201,123,74,0.2);
+    border-radius: var(--radius-sm);
+    padding: 12px 16px;
+    font-size: 0.85rem;
+    color: rgba(255,255,255,0.8);
+    border-left: 3px solid var(--accent);
+    line-height: 1.6;
+  }
+
+  /* ── FAQ ── */
+  .faq { background: var(--bg-white); }
+
+  .faq-list {
+    max-width: 760px;
+    margin: 48px auto 0;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .faq-item {
+    border: 1px solid rgba(62,86,65,0.12);
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+    background: var(--bg-cream);
+  }
+
+  .faq-q {
+    width: 100%;
+    background: none;
+    border: none;
+    padding: 18px 22px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    cursor: pointer;
+    font-family: var(--font);
+    font-size: 0.96rem;
+    font-weight: 700;
+    color: var(--fg-title);
+    text-align: left;
+    transition: background 0.2s;
+  }
+
+  .faq-q:hover { background: rgba(217,180,143,0.15); }
+
+  .faq-icon {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: rgba(201,123,74,0.12);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    font-size: 1rem;
+    color: var(--accent);
+    font-weight: 700;
+    transition: transform 0.3s, background 0.2s;
+  }
+
+  .faq-item.open .faq-icon {
+    transform: rotate(45deg);
+    background: var(--accent);
+    color: var(--fg-light);
+  }
+
+  .faq-a {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.35s ease, padding 0.3s;
+    padding: 0 22px;
+    font-size: 0.9rem;
+    color: var(--fg-body);
+    line-height: 1.8;
+    background: var(--bg-white);
+  }
+
+  .faq-item.open .faq-a {
+    max-height: 200px;
+    padding: 0 22px 18px;
+  }
+
+  /* ── FOOTER ── */
+  .footer {
+    background: var(--primary-dark);
+    padding: 48px 0;
+    text-align: center;
+  }
+
+  .footer-logo {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--fg-light);
+    margin-bottom: 10px;
+  }
+
+  .footer-slogan {
+    font-size: 0.9rem;
+    color: rgba(255,255,255,0.5);
+    margin-bottom: 20px;
+    letter-spacing: 0.04em;
+  }
+
+  .footer-copy {
+    font-size: 0.78rem;
+    color: rgba(255,255,255,0.3);
+  }
+
+  /* ── SCROLL ANIMATION ── */
+  .fade-in {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+
+  .fade-in.visible {
+    opacity: 1;
+    transform: none;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .fade-in { opacity: 1; transform: none; transition: none; }
+  }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 1024px) {
+    .hero { grid-template-columns: 1fr; }
+    .hero-content { padding: 80px 40px; max-width: 640px; }
+    .hero-image { display: none; }
+    .hero { min-height: auto; padding-bottom: 80px; }
+    .what-inner,
+    .vibe-inner,
+    .products-inner { grid-template-columns: 1fr; gap: 40px; }
+    .vibe-image { order: 0; }
+    .vibe-text { order: 0; }
+    .who-grid { grid-template-columns: 1fr; }
+    .pricing-grid { grid-template-columns: 1fr; max-width: 420px; margin-left: auto; margin-right: auto; }
+    .reg-inner { grid-template-columns: 1fr; }
+  }
+
+  @media (max-width: 768px) {
+    .nav { padding: 0 20px; }
+    .nav-links { display: none; flex-direction: column; position: absolute; top: var(--nav-h); left: 0; right: 0; background: rgba(250,246,239,0.98); padding: 20px; gap: 16px; border-bottom: 1px solid rgba(217,180,143,0.3); }
+    .nav-links.open { display: flex; }
+    .nav-toggle { display: flex; }
+    .hero-content { padding: 60px 24px; }
+    .container { padding: 0 20px; }
+    section { padding: 64px 0; }
+    .bank-row { flex-direction: column; gap: 2px; }
+    .bank-label { min-width: auto; }
+  }
+
+  @media (max-width: 480px) {
+    .hero h1 { font-size: 1.8rem; }
+    .hero-btns { flex-direction: column; }
+    .btn-primary, .btn-outline { text-align: center; }
+    .who-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav" role="navigation" aria-label="主導覽" data-lvt-eid="5473932960">
+  <div class="nav-logo" data-lvt-eid="7590648e59">結繩<span data-lvt-eid="96c38a7e15">工作坊</span></div>
+  <ul class="nav-links" id="navLinks" data-lvt-eid="80c0747f6f">
+    <li data-lvt-eid="bd771da41f"><a href="#what" data-lvt-eid="9c5a9d2152">工作坊內容</a></li>
+    <li data-lvt-eid="d87e479b7d"><a href="#products" data-lvt-eid="84a9957a4e">成品與贈品</a></li>
+    <li data-lvt-eid="b998cb8234"><a href="#pricing" data-lvt-eid="d979340204">費用方案</a></li>
+    <li data-lvt-eid="7fce07a7ba"><a href="#registration" data-lvt-eid="94fbbd752a">報名匯款</a></li>
+    <li data-lvt-eid="e32ec263d5"><a href="#faq" data-lvt-eid="72f5083855">常見問題</a></li>
+    <li data-lvt-eid="d7926ed893"><a href="#registration" class="btn-nav" data-lvt-eid="9bedc09590">我要報名</a></li>
+  </ul>
+  <button class="nav-toggle" id="navToggle" aria-label="開啟選單" data-lvt-eid="7384c6b16a">
+    <span data-lvt-eid="323e19175e"></span><span data-lvt-eid="7bb0bfa24b"></span><span data-lvt-eid="a6e4a06b4c"></span>
+  </button>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="top" data-lvt-eid="1c805a439b">
+  <div class="hero-content" data-lvt-eid="aaeda008a6">
+    <div class="kicker" data-lvt-eid="413c5883c4">3 小時手作體驗</div>
+    <h1 data-lvt-eid="37771bfee8">打一個結，<br data-lvt-eid="106f8e7cb5">把<em data-lvt-eid="cfd2ac7bdc">心</em>靜下來</h1>
+    <p class="hero-sub" data-lvt-eid="264b952dbb">零基礎也能上手，3 小時帶走一條親手編的傘繩手環，送給自己或送給最重要的人</p>
+    <div class="hero-btns" data-lvt-eid="d4a329fe36">
+      <a href="#registration" class="btn-primary" data-lvt-eid="98123c7dd4">早鳥 NT$600 搶位</a>
+      <a href="#what" class="btn-outline" data-lvt-eid="d805d5fd64">看看會做什麼</a>
+    </div>
+  </div>
+  <div class="hero-image" aria-hidden="true" data-lvt-eid="5d41bc273a">
+    <img src="https://a.lovart.ai/artifacts/agent/8KyqHnp7vb9mHIL2.png" alt="結繩工作坊主視覺" data-lvt-eid="cdf40cca3c">
+  </div>
+</section>
+
+<!-- WHAT WE DO -->
+<section class="what-we-do" id="what" data-lvt-eid="230bb0fcf6">
+  <div class="container" data-lvt-eid="1d69ce5e42">
+    <div class="what-inner" data-lvt-eid="750490fdce">
+      <div class="what-image fade-in" data-lvt-eid="caf33097d3">
+        <img src="https://a.lovart.ai/artifacts/agent/eIxVorBsAK8LhRxx.png" alt="手部編織特寫" data-lvt-eid="b8285636a3">
+      </div>
+      <div class="fade-in" data-lvt-eid="9c18b969e0">
+        <div class="section-label" data-lvt-eid="663e946e85">工作坊在做什麼</div>
+        <h2 class="section-title" data-lvt-eid="184fd81335">三小時，<br data-lvt-eid="ee452f7ef4">從零到完成一件作品</h2>
+        <div class="steps" data-lvt-eid="8ce07fcacf">
+          <div class="step" data-lvt-eid="388b6f1dbe">
+            <div class="step-num" data-lvt-eid="fe8372eff6">1</div>
+            <div class="step-text" data-lvt-eid="7167657bb0">
+              <strong data-lvt-eid="10884c78d4">認識傘繩與基礎結法</strong>
+              <span data-lvt-eid="160f505acd">了解傘繩的特性，學習幾個核心基礎結，建立手感與信心</span>
+            </div>
+          </div>
+          <div class="step" data-lvt-eid="91ca24fb80">
+            <div class="step-num" data-lvt-eid="7c39ff48cc">2</div>
+            <div class="step-text" data-lvt-eid="485fa10e6b">
+              <strong data-lvt-eid="4721a09b50">老師一步一步帶著編</strong>
+              <span data-lvt-eid="99c4886e70">不趕進度，確保每個人都跟上，有問題隨時舉手</span>
+            </div>
+          </div>
+          <div class="step" data-lvt-eid="5406b967a3">
+            <div class="step-num" data-lvt-eid="ceebf27634">3</div>
+            <div class="step-text" data-lvt-eid="3a1b349340">
+              <strong data-lvt-eid="f57e8b5e5a">完成一條可日常配戴的作品</strong>
+              <span data-lvt-eid="dad6a5a755">手環或吊飾，親手完成，當天帶回家</span>
+            </div>
+          </div>
+        </div>
+        <div class="what-note" data-lvt-eid="015730ffe2">
+          🎒 不用帶任何工具，不用有美術底子——全部材料由我們提供
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- WHO IS IT FOR -->
+<section class="who-for" data-lvt-eid="7bcf6bc217">
+  <div class="container" data-lvt-eid="414ab361f3">
+    <div class="fade-in" style="text-align:center; max-width:520px; margin:0 auto;" data-lvt-eid="b3d9847e50">
+      <div class="section-label" data-lvt-eid="af31f252ee">適合誰來</div>
+      <h2 class="section-title" data-lvt-eid="4dd945ac06">只要你想動手，<br data-lvt-eid="0db0096b6e">這裡就是你的位置</h2>
+    </div>
+    <div class="who-grid" data-lvt-eid="3f59d065b4">
+      <div class="who-card fade-in" data-lvt-eid="f29a3fff83">
+        <div class="who-icon" data-lvt-eid="e6da5a34a6">🌿</div>
+        <div data-lvt-eid="8c9611c53c">
+          <h3 data-lvt-eid="ff903ec06f">想放鬆紓壓的你</h3>
+          <p data-lvt-eid="1138e85a6d">專注在一條線上，讓思緒慢下來，是最好的正念練習</p>
+        </div>
+      </div>
+      <div class="who-card fade-in" data-lvt-eid="105332982e">
+        <div class="who-icon" data-lvt-eid="eb3714b4a3">🎁</div>
+        <div data-lvt-eid="fb6e7d36a6">
+          <h3 data-lvt-eid="59af1b3b70">想送一份手作禮物的你</h3>
+          <p data-lvt-eid="c25d653ac7">親手編的，比買的更有溫度，送出去的是心意</p>
+        </div>
+      </div>
+      <div class="who-card fade-in" data-lvt-eid="52fbccec8b">
+        <div class="who-icon" data-lvt-eid="aec40a96c0">👯</div>
+        <div data-lvt-eid="abacb1d7ff">
+          <h3 data-lvt-eid="bf1736f5dc">想揪朋友一起玩的你</h3>
+          <p data-lvt-eid="8a3fe8ec0d">三人同行還有加碼贈品，揪越多越超值</p>
+        </div>
+      </div>
+      <div class="who-card fade-in" data-lvt-eid="6221ccb81f">
+        <div class="who-icon" data-lvt-eid="4de468182a">🪢</div>
+        <div data-lvt-eid="4545d9ae32">
+          <h3 data-lvt-eid="9bc0536e66">對傘繩工藝好奇的你</h3>
+          <p data-lvt-eid="b80b179705">一直想試試看？這就是最好的入門機會</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRODUCTS & GIFTS -->
+<section class="products" id="products" data-lvt-eid="a5ebe22653">
+  <div class="container" data-lvt-eid="8e236d5b70">
+    <div class="fade-in" data-lvt-eid="0a680383e7">
+      <div class="section-label" data-lvt-eid="6f6119ff43">成品與贈品</div>
+      <h2 class="section-title" data-lvt-eid="c82694dc8b">帶走的，不只是一條手環</h2>
+    </div>
+    <div class="products-inner" data-lvt-eid="744bbf15f8">
+      <div class="product-image fade-in" data-lvt-eid="f2975dbbf8">
+        <img src="https://a.lovart.ai/artifacts/agent/Pg6Jwj2bwjGD3Uok.png" alt="成品手環與飾品陳列" data-lvt-eid="c7017a656d">
+      </div>
+      <div class="fade-in" data-lvt-eid="dbbb522636">
+        <div class="product-main" data-lvt-eid="db513b59fa">
+          <h3 data-lvt-eid="852ac50702">🪢 自己親手編的傘繩作品</h3>
+          <p data-lvt-eid="67fa8faad5">每一個結都是你打的，每一段線都是你穿的。帶回家的，是三小時專注的痕跡。</p>
+        </div>
+        <div class="gift-card" data-lvt-eid="14bf19de30">
+          <div class="gift-badge" data-lvt-eid="2e56c7e780">三人同行加碼</div>
+          <h3 data-lvt-eid="cc1f6e8bcd">每人再贈一條<br data-lvt-eid="ba0190b552">作者親編限量結繩飾品</h3>
+          <p data-lvt-eid="56e0ade5ee">由蔡曜隆老師親手編製，限量、手工、獨一無二。揪三個人來，每人都有一條。</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- VIBE -->
+<section class="vibe" data-lvt-eid="3022281d18">
+  <div class="container" data-lvt-eid="02e5c76bc2">
+    <div class="vibe-inner" data-lvt-eid="73b566fa9b">
+      <div class="vibe-text fade-in" data-lvt-eid="7a5f324558">
+        <div class="section-label" data-lvt-eid="bd2c574995">活動氛圍</div>
+        <h2 class="section-title" data-lvt-eid="ed082b09ea">一起動手，<br data-lvt-eid="3b6985596b">是最好的陪伴</h2>
+        <div class="vibe-quote" data-lvt-eid="04efdb810d">
+          「不需要說話，只需要坐在一起，<br data-lvt-eid="d75055d76e">讓手帶著心，慢慢地打一個結。」
+        </div>
+        <p class="vibe-desc" data-lvt-eid="89120b2f04">
+          工作坊的氛圍輕鬆、溫暖，沒有競爭、沒有評分。
+          每個人按自己的節奏，老師在旁邊陪著你。
+          三小時後，你會帶走一件作品，也帶走一段緩慢的好時光。
+        </p>
+      </div>
+      <div class="vibe-image fade-in" data-lvt-eid="8294f3d5d0">
+        <img src="https://a.lovart.ai/artifacts/agent/fmPpYeMXNmGpM8yZ.png" alt="三人開心同樂手作" data-lvt-eid="5dd65b715d">
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section class="pricing" id="pricing" data-lvt-eid="2ba857a0eb">
+  <div class="container" data-lvt-eid="cde81bda21">
+    <div class="fade-in" style="text-align:center; max-width:520px; margin:0 auto;" data-lvt-eid="8425fd001d">
+      <div class="section-label" data-lvt-eid="61db466297">費用方案</div>
+      <h2 class="section-title" data-lvt-eid="f11f691881">選一個最適合你的方案</h2>
+    </div>
+    <div class="pricing-grid" data-lvt-eid="38a74c3c8e">
+      <div class="price-card featured fade-in" data-lvt-eid="2ce2cd1c41">
+        <div class="price-card-icon" data-lvt-eid="ce675350b7">⚡</div>
+        <div class="price-card-name" data-lvt-eid="904e1abdeb">早鳥票</div>
+        <div class="price-original" data-lvt-eid="6f737ad928">原價 NT$800</div>
+        <div class="price-amount" data-lvt-eid="f3328b0beb">NT$600</div>
+        <div class="price-unit" data-lvt-eid="99940027ec">/ 人（限時優惠）</div>
+        <ul class="price-includes" data-lvt-eid="0b4a576fcb">
+          <li data-lvt-eid="2c33c100a3">3 小時完整教學</li>
+          <li data-lvt-eid="60e863cf7b">全部傘繩材料</li>
+          <li data-lvt-eid="e006957ab3">完成作品帶回家</li>
+        </ul>
+      </div>
+      <div class="price-card fade-in" data-lvt-eid="dcf8d3c60a">
+        <div class="price-card-icon" data-lvt-eid="821a3045bc">🪢</div>
+        <div class="price-card-name" data-lvt-eid="dbce980ccb">一般票</div>
+        <div class="price-amount" data-lvt-eid="2b832bc591">NT$800</div>
+        <div class="price-unit" data-lvt-eid="9eb695caed">/ 人</div>
+        <ul class="price-includes" data-lvt-eid="feb2fc5810">
+          <li data-lvt-eid="cc95b5e5cd">3 小時完整教學</li>
+          <li data-lvt-eid="c3544d68ec">全部傘繩材料</li>
+          <li data-lvt-eid="4b97a65742">完成作品帶回家</li>
+        </ul>
+      </div>
+      <div class="price-card fade-in" data-lvt-eid="a53702a116">
+        <div class="price-card-icon" data-lvt-eid="30a40d44d3">👯</div>
+        <div class="price-tag" data-lvt-eid="dae98a821d">揪團最超值</div>
+        <div class="price-card-name" data-lvt-eid="142edd3647">三人同行</div>
+        <div class="price-amount" style="font-size:1.5rem; margin-bottom:8px;" data-lvt-eid="2d03f6a128">每人再贈</div>
+        <div class="price-unit" style="margin-bottom:12px;" data-lvt-eid="f6e69c8b0d">一條作者親編限量結繩飾品</div>
+        <ul class="price-includes" data-lvt-eid="6b85cf90a4">
+          <li data-lvt-eid="8976ba2a72">三人同行即享贈品</li>
+          <li data-lvt-eid="8ce24be5bd">作者親手編製，限量</li>
+          <li data-lvt-eid="b4ca5e8ae3">獨一無二，無法購買</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- REGISTRATION -->
+<section class="registration" id="registration" data-lvt-eid="9acaebc4c1">
+  <div class="container" data-lvt-eid="7a0010f8ed">
+    <div class="fade-in" data-lvt-eid="98ad88478c">
+      <div class="section-label" data-lvt-eid="95bef6765e">報名方式</div>
+      <h2 class="section-title" data-lvt-eid="e04c87abe3">報名與匯款資訊</h2>
+    </div>
+    <div class="reg-inner" data-lvt-eid="2cfe2c593a">
+      <div class="reg-steps fade-in" data-lvt-eid="eb521ceed6">
+        <div class="reg-step" data-lvt-eid="3ef8dd5ceb">
+          <div class="reg-step-num" data-lvt-eid="904f040f79">1</div>
+          <div class="reg-step-text" data-lvt-eid="44d00ede69">
+            <strong data-lvt-eid="77f8c95ed4">填寫報名資料</strong>
+            <span data-lvt-eid="0c6fc19b3b">請於粉專私訊或來訊留下您的姓名、報名人數與場次，我們會盡快回覆確認。</span>
+          </div>
+        </div>
+        <div class="reg-step" data-lvt-eid="e50dab9f6a">
+          <div class="reg-step-num" data-lvt-eid="7a10be8793">2</div>
+          <div class="reg-step-text" data-lvt-eid="76be5bffaa">
+            <strong data-lvt-eid="e3e9625342">匯款至指定帳號</strong>
+            <span data-lvt-eid="6ee47ad168">依右側匯款資訊完成匯款，金額依選擇方案（早鳥 NT$600 / 一般 NT$800）。</span>
+          </div>
+        </div>
+        <div class="reg-step" data-lvt-eid="c56abb308e">
+          <div class="reg-step-num" data-lvt-eid="4c3463e511">3</div>
+          <div class="reg-step-text" data-lvt-eid="b30a617f6b">
+            <strong data-lvt-eid="c401a50576">提供匯款末五碼</strong>
+            <span data-lvt-eid="37ce0b909b">匯款完成後，請提供「匯款末五碼」讓我們對帳，即完成報名。</span>
+          </div>
+        </div>
+        <div style="margin-top: 12px; padding: 16px 20px; background: rgba(255,255,255,0.06); border-radius: 10px; border: 1px solid rgba(255,255,255,0.12);" data-lvt-eid="b3d15181cb">
+          <p style="font-size: 0.85rem; color: rgba(255,255,255,0.6); line-height: 1.7;" data-lvt-eid="7d4c157da8">
+            📅 場次資訊請洽官方粉專公告，名額有限，建議提早確認場次後再匯款。
+          </p>
+        </div>
+      </div>
+      <div class="bank-card fade-in" data-lvt-eid="45c65bfd39">
+        <div class="bank-card-title" data-lvt-eid="898cb9ec51">匯款資訊</div>
+        <div class="bank-rows" data-lvt-eid="3551e33d3a">
+          <div class="bank-row" data-lvt-eid="6ac20c43d1">
+            <span class="bank-label" data-lvt-eid="0874adde78">戶名</span>
+            <span class="bank-value" data-lvt-eid="1dd0443acb">光線尺顧問有限公司</span>
+          </div>
+          <div class="bank-divider" data-lvt-eid="e12ee2757f"></div>
+          <div class="bank-row" data-lvt-eid="c47b524f4d">
+            <span class="bank-label" data-lvt-eid="0de9d40e6a">銀行</span>
+            <span class="bank-value" data-lvt-eid="ff824082a4">永豐銀行 - 鶯歌分行</span>
+          </div>
+          <div class="bank-row" data-lvt-eid="a95c935b99">
+            <span class="bank-label" data-lvt-eid="c728e4435b">銀行代號</span>
+            <span class="bank-value highlight" data-lvt-eid="1b3684b73a">807</span>
+          </div>
+          <div class="bank-row" data-lvt-eid="94f6033823">
+            <span class="bank-label" data-lvt-eid="f7168312f0">帳號</span>
+            <span class="bank-value highlight" data-lvt-eid="f8210c6a3d">140-018-0003132-9</span>
+          </div>
+        </div>
+        <div class="bank-note" data-lvt-eid="d2bfa5a045">
+          💡 匯款完成請提供「末五碼」以利對帳，即完成報名。
+        </div>
+        <div style="margin-top: 16px;" data-lvt-eid="a6c315c117">
+          <img src="https://a.lovart.ai/artifacts/agent/t0jNc8WyNU3VuRBx.png" alt="作者親編限量飾品" style="width: 100%; height: 200px; object-fit: cover; border-radius: 10px; object-position: center;" data-lvt-eid="b5f7cc17e9">
+          <p style="font-size: 0.78rem; color: rgba(255,255,255,0.45); text-align: center; margin-top: 6px;" data-lvt-eid="8e5898d8a7">三人同行贈品：作者親編限量結繩飾品</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="faq" id="faq" data-lvt-eid="4cc65bc6fb">
+  <div class="container" data-lvt-eid="dcb6358eb6">
+    <div class="fade-in" style="text-align:center; max-width:520px; margin:0 auto;" data-lvt-eid="e7c9b4e532">
+      <div class="section-label" data-lvt-eid="3f8bccd27b">常見問題</div>
+      <h2 class="section-title" data-lvt-eid="4fc9c0b099">有問題？<br data-lvt-eid="024ac9f799">我們先回答你</h2>
+    </div>
+    <div class="faq-list" data-lvt-eid="7bd5ec039a">
+      <div class="faq-item fade-in" data-lvt-eid="d9d2e811dc">
+        <button class="faq-q" aria-expanded="false" data-lvt-eid="1baba0b10c">
+          完全沒做過手工可以嗎？
+          <span class="faq-icon" data-lvt-eid="bb574c5c18">+</span>
+        </button>
+        <div class="faq-a" data-lvt-eid="29093aceb5">
+          完全可以！工作坊從零開始教，不需要任何手工藝基礎。老師會一步一步帶著你，確保每位學員都能跟上進度。
+        </div>
+      </div>
+      <div class="faq-item fade-in" data-lvt-eid="dbc6e261a2">
+        <button class="faq-q" aria-expanded="false" data-lvt-eid="08c50956f0">
+          材料要自己準備嗎？
+          <span class="faq-icon" data-lvt-eid="1ce588dd23">+</span>
+        </button>
+        <div class="faq-a" data-lvt-eid="9ad12b1700">
+          不需要！全部傘繩材料與工具由我們提供，你只需要帶著自己來就好。
+        </div>
+      </div>
+      <div class="faq-item fade-in" data-lvt-eid="8e49b1f37c">
+        <button class="faq-q" aria-expanded="false" data-lvt-eid="00c7795f83">
+          三小時做不完怎麼辦？
+          <span class="faq-icon" data-lvt-eid="8c158d7110">+</span>
+        </button>
+        <div class="faq-a" data-lvt-eid="f159ee7931">
+          老師會根據每位學員的進度調整，確保每個人在課程結束前都能完成自己的作品。不用擔心，你一定帶得走。
+        </div>
+      </div>
+      <div class="faq-item fade-in" data-lvt-eid="353d04ef13">
+        <button class="faq-q" aria-expanded="false" data-lvt-eid="1f8f1e8daf">
+          三人同行贈品怎麼領？
+          <span class="faq-icon" data-lvt-eid="a9542ee771">+</span>
+        </button>
+        <div class="faq-a" data-lvt-eid="ef133de38a">
+          報名時請於訊息中註明「三人同行」，並提供三位學員的姓名。現場每人各贈一條作者親編限量結繩飾品，數量有限，先到先得。
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer" data-lvt-eid="a418e87ec8">
+  <div class="container" data-lvt-eid="18f2bd9359">
+    <div class="footer-logo" data-lvt-eid="8e4473bd14">結繩工作坊 × 光線尺顧問有限公司</div>
+    <div class="footer-slogan" data-lvt-eid="6894fe5484">一條線，結起一段緩慢的好時光</div>
+    <div class="footer-copy" data-lvt-eid="7faacf073a">© 2026 光線尺顧問有限公司 All Rights Reserved.</div>
+  </div>
+</footer>
+
+<script>
+  // Nav toggle
+  const toggle = document.getElementById('navToggle');
+  const links = document.getElementById('navLinks');
+  toggle.addEventListener('click', () => {
+    links.classList.toggle('open');
+  });
+
+  links.querySelectorAll('a').forEach(a => {
+    a.addEventListener('click', () => links.classList.remove('open'));
+  });
+
+  // FAQ accordion
+  document.querySelectorAll('.faq-q').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const item = btn.closest('.faq-item');
+      const isOpen = item.classList.contains('open');
+      document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
+      document.querySelectorAll('.faq-q').forEach(b => b.setAttribute('aria-expanded', 'false'));
+      if (!isOpen) {
+        item.classList.add('open');
+        btn.setAttribute('aria-expanded', 'true');
+      }
+    });
+  });
+
+  // Scroll fade-in
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+</script>
+
+
+</body></html>
